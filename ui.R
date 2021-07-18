@@ -3,6 +3,10 @@ library(ggplot2)
 
 dataset <- diamonds
 
+greenhouse <- read.csv("data/greenhouse.csv")
+population <- read.csv("data/population.csv")
+
+
 fluidPage(
   
   titlePanel("Diamonds Explorer"),
@@ -20,6 +24,7 @@ fluidPage(
     checkboxInput('smooth', 'Smooth'),
     
     selectInput('facet_row', 'Facet Row', c(None='.', names(dataset))),
+    selectInput('fff', 'Facet ewfwef', c(None='.', names(greenhouse))),
     selectInput('facet_col', 'Facet Column', c(None='.', names(dataset)))
   ),
   
