@@ -1,11 +1,16 @@
 library(eurostat)
 library(dplyr)
 
-greenhouse <- get_eurostat('env_air_gge') %>% filter(time == '2019-01-01')
-population <- get_eurostat('tps00001') %>% filter(time == '2019-01-01')
+greenhouse <- get_eurostat('env_air_gge')
 
-write.csv(greenhouse, file = "./greenhouse.csv")
-write.csv(population, file = "./population.csv")
+# Keep only category which is under analysis
+greenhouse <- greenhouse[which(greenhouse$src_crf == 'TOTX4_MEMONIA'),] %>% select(-src_crf)
+
+population <- get_eurostat('tps00001') [,-1]
+
+write.csv(greenhouse, file = "data/greenhouse.csv")
+write.csv(population, file = "data/population.csv")
 
 greenhouse <- read.csv("data/greenhouse.csv")
 population <- read.csv("data/population.csv")
+

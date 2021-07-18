@@ -5,9 +5,9 @@ account: andreacolombo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4396921
-bundleId: 4831001
+bundleId: 4831025
 url: https://andreacolombo.shinyapps.io/gasemissionapp/
-when: 1626608018.5335
-lastSyncTime: 1626608018.5335
+when: 1626608928.36592
+lastSyncTime: 1626608928.36592
 asMultiple: FALSE
 asStatic: FALSE
