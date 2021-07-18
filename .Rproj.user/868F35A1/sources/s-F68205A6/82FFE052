@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1626603379501.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "626269337",
+    "id" : "82FFE052",
+    "lastKnownWriteTime" : 1626604151,
+    "last_content_update" : 1626604151848,
+    "path" : "D:/Documenti D/Codes/GasEmissionApp/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "cursorPosition" : "10,2",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
