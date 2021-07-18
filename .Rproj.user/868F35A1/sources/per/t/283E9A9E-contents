@@ -2,6 +2,8 @@
 library(dplyr)
 library(shiny)
 library(ggplot2)
+library(ggrepel)
+library(plotly)
 
 # Data Loading
 
@@ -51,19 +53,20 @@ population$geo <-as.character(population$geo)
 green_popu <- greenhouse %>% inner_join(population, by = c('geo', 'time'))
 green_popu <- green_popu %>% mutate_if(is.character, as.factor)
 
-green_popu <- green_popu %>% filter(airpol == 'GHG') %>% select(-airpol)%>% filter(time == '2019') %>% select(-time)
+green_popu <- green_popu %>% filter(airpol == 'GHG') %>% select(-airpol) 
+
+countries <- c('Austria', 'Belgium', 'Bulgaria', 'Cyprus', 'Czech Republic', 'Germany', 'Denmark', 'Estonia','Greece', 'Spain', 'Finland', 'France', 'Croatia',
+               'Hungary', 'Ireland', 'Italy',  'Lithuania', 'Luxembourg', 'Latvia', 'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania',  'Sweden', 'Slovenia','Slovakia', 'United Kingdom' )
+
+green_popu$population <- green_popu$population/1000000
+
+green_popu <- data.frame(green_popu, countries, gas_per_pop = green_popu$gas/green_popu$population)
 
 
-library("gridExtra")
+years_available <- green_popu %>% select(time) %>% distinct()
 
-ggp <- ggplot(data = green_popu, mapping = aes(x=population, y=gas)) +
-      geom_point(aes(colour=geo, size = gas), alpha=0.6) + 
-      geom_text(aes(label= geo),hjust=1, vjust=0)
+df<- green_popu %>% filter(time == '2019')
 
-ggp2
-
-
-ggp2 <-ggplot(green_popu, mapping = aes(geo)) + geom_histogram(aes(fill=geo), binwidth = .1, col="black", size=.1)
 
 
 
@@ -75,24 +78,24 @@ ggp2 <-ggplot(green_popu, mapping = aes(geo)) + geom_histogram(aes(fill=geo), bi
 ###################
 
 # Predict NAs through a Random Forest model
-index <- which(is.na(green_popu$gas))
-dataset <- green_popu[index,-4]
-dataset <- predict(my_model, dataset)
-
-green_popu[which(is.na(green_popu$gas)),'gas'] <- as.numeric(dataset)
-
-estimated <- 1:NROW(green_popu)
-estimated[which(estimated %in% index)] <- 'Yes'
-estimated[which(estimated != 'Yes')] <- 'No'
-
-green_popu <- data.frame(green_popu, estimated)
-
-
-# Select Year
-
-green_popu <- green_popu %>% filter(time == '2019') %>% select(-time)
-
-ggp <- ggplot(data = green_popu, mapping = aes(x=population, y=gas)) +
-  geom_point(aes(colour=geo), alpha=0.6) + geom_text(aes(label= geo),hjust=0, vjust=0)+ facet_wrap(~ airpol)
-  
-print(ggp)
+# index <- which(is.na(green_popu$gas))
+# dataset <- green_popu[index,-4]
+# dataset <- predict(my_model, dataset)
+# 
+# green_popu[which(is.na(green_popu$gas)),'gas'] <- as.numeric(dataset)
+# 
+# estimated <- 1:NROW(green_popu)
+# estimated[which(estimated %in% index)] <- 'Yes'
+# estimated[which(estimated != 'Yes')] <- 'No'
+# 
+# green_popu <- data.frame(green_popu, estimated)
+# 
+# 
+# # Select Year
+# 
+# green_popu <- green_popu %>% filter(time == '2019') %>% select(-time)
+# 
+# ggp <- ggplot(data = green_popu, mapping = aes(x=population, y=gas)) +
+#   geom_point(aes(colour=geo), alpha=0.6) + geom_text(aes(label= geo),hjust=0, vjust=0)+ facet_wrap(~ airpol)
+#   
+# print(ggp)
