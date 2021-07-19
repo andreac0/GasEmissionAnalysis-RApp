@@ -4,15 +4,22 @@ library(shiny)
 library(ggplot2)
 library(ggrepel)
 library(plotly)
+library(shinyWidgets)
+library(shinydashboard)
+library(stringr)
 
 # Data Loading
 
 greenhouse <- read.csv("Data/greenhouse.csv")[,-1]
 population <- read.csv("Data/population.csv")[,-1]
-area <- read.csv('Data/area_km.csv') %>% filter(LANDUSE == 'Total area') %>% select(TIME, GEO, Value) %>% distinct()
+area <- read.csv('Data/area_km.csv', stringsAsFactors=FALSE) %>% filter(LANDUSE == 'Total area') %>% select(TIME, GEO, Value) %>% distinct() %>% filter(TIME == '2014')
 
-area$Value <- as.numeric(area$Value)
- 
+area$Value <- as.numeric(gsub(",.*$", "", area$Value))
+area$GEO[5] <- "Germany"
+
+names(area)[2] <- "countries"
+names(area)[3] <- "area"
+
 # Clean Date
 greenhouse$time <- substr(greenhouse$time,1,4)
 population$time <- substr(population$time,1,4)
@@ -58,7 +65,7 @@ green_popu <- green_popu %>% mutate_if(is.character, as.factor)
 
 green_popu <- green_popu %>% filter(airpol == 'GHG') %>% select(-airpol) 
 
-countries <- c('Austria', 'Belgium', 'Bulgaria', 'Cyprus', 'Czech Republic', 'Germany', 'Denmark', 'Estonia','Greece', 'Spain', 'Finland', 'France', 'Croatia',
+countries <- c('Austria', 'Belgium', 'Bulgaria', 'Cyprus', 'Czechia', 'Germany', 'Denmark', 'Estonia','Greece', 'Spain', 'Finland', 'France', 'Croatia',
                'Hungary', 'Ireland', 'Italy',  'Lithuania', 'Luxembourg', 'Latvia', 'Malta', 'Netherlands', 'Poland', 'Portugal', 'Romania',  'Sweden', 'Slovenia','Slovakia', 'United Kingdom' )
 
 green_popu$population <- green_popu$population/1000000
@@ -70,6 +77,10 @@ years_available <- green_popu %>% select(time) %>% distinct()
 
 df<- green_popu %>% filter(time == '2019')
 
+
+
+green_popu <- green_popu %>% inner_join(area, by = c('countries')) %>% select(-TIME)
+green_popu <- data.frame(green_popu, gas_per_area = df2$gas/df2$area)
 
 
 
