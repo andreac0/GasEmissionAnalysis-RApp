@@ -9,8 +9,11 @@ library(plotly)
 
 greenhouse <- read.csv("Data/greenhouse.csv")[,-1]
 population <- read.csv("Data/population.csv")[,-1]
+area <- read.csv('Data/area_km.csv') %>% filter(LANDUSE == 'Total area') %>% select(TIME, GEO, Value) %>% distinct()
 
- # Clean Date
+area$Value <- as.numeric(area$Value)
+ 
+# Clean Date
 greenhouse$time <- substr(greenhouse$time,1,4)
 population$time <- substr(population$time,1,4)
 
