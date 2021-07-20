@@ -8,8 +8,7 @@ sidebar <- dashboardSidebar(
     width = 252,
     # Menu on the blue bar on the LH side
     menuItem("Summary Page", tabName = "start_page",icon = icon("th")),
-    menuItem("Other Analysis", tabName = "add_analysis",  icon = icon("chart-line")),
-    menuItem("Time Evolution",tabName = "time_evolution",icon = icon("sitemap"))
+    menuItem("Country Level Analysis", tabName = "add_analysis",  icon = icon("chart-line"))
     )
 )
 
@@ -28,7 +27,7 @@ body <- dashboardBody(
                   status = "primary",
                   
                   column(
-                    width = 6,
+                    width = 3,
                     selectInput('year', 'Select year to display', 
                                 choices = years_available,
                                 selected = '2019')
@@ -49,16 +48,50 @@ body <- dashboardBody(
                   width = 6,
                   plotlyOutput('plotarea'),
                   plotlyOutput('bargasareaplot')
+                ),
+                
+                DT::dataTableOutput("comparison_table")
                 )
-
-                )
-              ))
+              )),
               
             
+    tabItem(tabName = "add_analysis",
+            h2(""),
             
+            fluidRow(
+              box(title = "Greenhouse Gas Emissions",
+                  width = 12,
+                  height = 120,
+                  solidHeader = TRUE,
+                  status = "primary",
+                  
+                  
+                  column(
+                    width = 3,
+                    selectInput('country', 'Select country', 
+                                choices = countries,
+                                selected = 'Germany')
+                  ),
+              )),
+            
+            fluidRow(
+              box(title = "Time evolution of greenhouse emissions",
+                  width = 12,
+                  solidHeader = TRUE,
+                  status = "primary",
+                  
+
+                  plotlyOutput("barplot_comp"),
+                  
+                  DT::dataTableOutput("country_table")
+                  
+              ))
+            
+            
+            )       
             
     )
-  )
+)
 
 
 

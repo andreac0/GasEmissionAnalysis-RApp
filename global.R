@@ -7,6 +7,7 @@ library(plotly)
 library(shinyWidgets)
 library(shinydashboard)
 library(stringr)
+library(tidyr)
 
 # Data Loading
 
@@ -80,7 +81,7 @@ df<- green_popu %>% filter(time == '2019')
 
 
 green_popu <- green_popu %>% inner_join(area, by = c('countries')) %>% select(-TIME)
-green_popu <- data.frame(green_popu, gas_per_area = df2$gas/df2$area)
+green_popu <- data.frame(green_popu, gas_per_area = green_popu$gas/green_popu$area)
 
 
 

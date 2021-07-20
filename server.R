@@ -10,6 +10,41 @@ function(input, output) {
     #dataset <- green_popu %>% filter(time == '2019') 
   })
   
+
+  green_table <- reactive({
+    data <- green_popu %>% filter(time == input$year) %>% mutate(population = population * 1000000) %>% mutate(`Tonnes of greenhouse emissions per area` = gas/area)
+    
+    green_table <- data %>% select(Country = countries, KM2 = area, Emissions = gas, Population = population, `Tonnes of greenhouse emissions per area`) %>%
+      mutate(`Tonnes of greenhouse per millions people` = Emissions/Population*1000000) %>% rename(`Tonnes of emissions in terms of CO2` = Emissions)
+  })
+  
+  country_level <- reactive({
+    
+    aggregate <- greenhouse %>% filter(airpol != 'GHG') %>% inner_join(green_popu %>% select(geo, countries) %>% distinct(), by = 'geo') %>% select(-geo)
+    
+    aggregate <- aggregate %>% filter(countries == input$country) %>% select(-countries) 
+    aggregate$airpol <- as.character(aggregate$airpol)
+    
+    return(aggregate)
+  })
+  
+  output$barplot_comp <- renderPlotly({ 
+    
+    dat_long <- country_level() %>%  gather('Type', 'Emissions',-airpol, -time) %>% rename(`Type of emission` = airpol)
+    
+    if(nrow(dat_long) > 0){
+      
+      bar_comparison <- ggplot() + 
+        geom_bar(data=dat_long, aes(x=time, y=Emissions, fill=`Type of emission`), stat='identity', size= 1.3, width=.5) +
+        theme(panel.spacing.y=unit(0.01, "lines"))+xlab("Date") + ylab("Total emissions (in CO2 mil of tonnes)") 
+    
+    } else {bar_comparison <- ggplot()}
+    
+    bar_comparison
+  })
+    
+    
+    
   output$bargasplot <- renderPlotly({
     
     # Basic barplot
@@ -59,23 +94,18 @@ function(input, output) {
       #   color = "grey30") +
       
       labs(
-        title = "Greenhouse Gas Emissions per Population",
+        title = "Greenhouse Gas Emissions and Population",
         x = "Population (in Millions)",
-        y = "Total Greenhouse Emissions (Millions of tonnes)"
+        y = "Total Greenhouse Emissions (Mil. tonnes)"
       ) +  
       theme(
         legend.position = "none",
         # Customize title and subtitle font/size/color
         plot.title = element_text(
           size = 20,
-          face = "bold", 
           color = "#2a475e"
         ),
-        plot.subtitle = element_text(
-          size = 15, 
-          face = "bold", 
-          color = "#1b2838"
-        ),
+       
         plot.title.position = "plot",
         
         # Adjust axis parameters such as size and color.
@@ -111,21 +141,16 @@ function(input, output) {
     labs(
       title = "Greenhouse Gas Emissions per Area",
       x = "Area (KM2)",
-      y = "Total Greenhouse Emissions (Millions of tonnes)"
+      y = "Total Greenhouse Emissions (Mil. of tonnes)"
     ) +  
       theme(
         legend.position = "none",
         # Customize title and subtitle font/size/color
         plot.title = element_text(
           size = 20,
-          face = "bold", 
           color = "#2a475e"
         ),
-        plot.subtitle = element_text(
-          size = 15, 
-          face = "bold", 
-          color = "#1b2838"
-        ),
+
         plot.title.position = "plot",
         
         # Adjust axis parameters such as size and color.
@@ -139,6 +164,17 @@ function(input, output) {
       )
     
     ggplotly(ggp)
+    
+  })
+  
+  output$comparison_table <- DT::renderDataTable({
+    
+    green_table()
+  })
+  
+  output$country_table <- DT::renderDataTable({
+    
+    country_level() %>% rename(`Type of emission` = airpol) %>% rename(Year = time)
     
   })
 }
