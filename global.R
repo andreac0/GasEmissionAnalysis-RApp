@@ -9,6 +9,7 @@ library(shinydashboard)
 library(stringr)
 library(tidyr)
 
+
 # Data Loading
 
 greenhouse <- read.csv("Data/greenhouse.csv")[,-1]
@@ -82,7 +83,6 @@ df<- green_popu %>% filter(time == '2019')
 
 green_popu <- green_popu %>% inner_join(area, by = c('countries')) %>% select(-TIME)
 green_popu <- data.frame(green_popu, gas_per_area = green_popu$gas/green_popu$area)
-
 
 
 

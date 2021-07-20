@@ -36,18 +36,18 @@ body <- dashboardBody(
               )),
             
             fluidRow(
-              box(
-                width = 12,
-                column(
-                  width = 6,
+              tabsetPanel(type = "tabs",
+              
+                tabPanel('Greenhouse Gas Emissions and Population',
+
                   plotlyOutput('plot'),
-                  plotlyOutput('bargasplot')
+                  plotlyOutput('bargasplot', height = "700px")
                 ),
                 
-                column(
-                  width = 6,
+                tabPanel('Greenhouse Gas Emissions per Area',
+
                   plotlyOutput('plotarea'),
-                  plotlyOutput('bargasareaplot')
+                  plotlyOutput('bargasareaplot', height = "700px")
                 ),
                 
                 DT::dataTableOutput("comparison_table")
@@ -72,6 +72,11 @@ body <- dashboardBody(
                                 choices = countries,
                                 selected = 'Germany')
                   ),
+                  
+                  column(
+                    width = 3,
+                    dateRangeInput('date_range', 'Select range', format = "yyyy",startview = 'decade', start = "2000-01-01")
+                  )
               )),
             
             fluidRow(
