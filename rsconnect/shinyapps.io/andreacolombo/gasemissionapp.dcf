@@ -5,10 +5,10 @@ account: andreacolombo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4396921
-bundleId: 4837235
+bundleId: 4854267
 url: https://andreacolombo.shinyapps.io/gasemissionapp/
-when: 1626774149.39486
-lastSyncTime: 1626774149.39486
+when: 1627222918.82569
+lastSyncTime: 1627222918.82569
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .gitattributes|exercise.docx|model.R|model.rds|test.xlsx
+ignoredFiles: .gitattributes|~$ercise.docx|~$test.xlsx|exercise.docx|gasemission.pdf|gasemission.Rmd|load_data.R|model.R|model.rds|test.xlsx

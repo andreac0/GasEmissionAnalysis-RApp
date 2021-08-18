@@ -1,6 +1,6 @@
 
 # Header
-header <- dashboardHeader(title = "Gas Emission in the EU", titleWidth = 350) 
+header <- dashboardHeader(title = "Greenhouse Emissions in the EU", titleWidth = 350) 
 
 # Sidebar content
 sidebar <- dashboardSidebar(
@@ -20,7 +20,7 @@ body <- dashboardBody(
             h2(""),
             
             fluidRow(
-              box(title = "Greenhouse Gas Emissions",
+              box(
                   width = 12,
                   height = 120,
                   solidHeader = TRUE,
@@ -44,11 +44,12 @@ body <- dashboardBody(
                   plotlyOutput('bargasplot', height = "700px")
                 ),
                 
-                tabPanel('Greenhouse Gas Emissions per Area',
+                tabPanel('Greenhouse Gas Emissions and Area (km2)',
 
                   plotlyOutput('plotarea'),
                   plotlyOutput('bargasareaplot', height = "700px")
                 ),
+               
                 
                 DT::dataTableOutput("comparison_table")
                 )
@@ -59,7 +60,7 @@ body <- dashboardBody(
             h2(""),
             
             fluidRow(
-              box(title = "Greenhouse Gas Emissions",
+              box(title = "Inputs",
                   width = 12,
                   height = 120,
                   solidHeader = TRUE,

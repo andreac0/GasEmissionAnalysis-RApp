@@ -7,6 +7,7 @@ library(plotly)
 library(shinyWidgets)
 library(shinydashboard)
 library(stringr)
+library(ggtext)
 library(tidyr)
 
 
@@ -18,6 +19,7 @@ area <- read.csv('Data/area_km.csv', stringsAsFactors=FALSE) %>% filter(LANDUSE 
 
 area$Value <- as.numeric(gsub(",.*$", "", area$Value))
 area$GEO[5] <- "Germany"
+area$Value <- area$Value *1000
 
 names(area)[2] <- "countries"
 names(area)[3] <- "area"
@@ -82,13 +84,18 @@ df<- green_popu %>% filter(time == '2019')
 
 
 green_popu <- green_popu %>% inner_join(area, by = c('countries')) %>% select(-TIME)
-green_popu <- data.frame(green_popu, gas_per_area = green_popu$gas/green_popu$area)
+green_popu <- data.frame(green_popu, gas_per_area = green_popu$gas/green_popu$area, density_pop = green_popu$population*1000000/green_popu$area)
 
+
+
+#gas_pop_mean <- mean(df[,6])
 
 
 ###################
 # Changing composition EU
 ###################
+
+
 
 ###################
 

@@ -12,10 +12,13 @@ function(input, output) {
   
 
   green_table <- reactive({
-    data <- green_popu %>% filter(time == input$year) %>% mutate(population = population * 1000000) %>% mutate(`Tonnes of greenhouse emissions per area` = gas/area)
+    data <- green_popu %>% filter(time == input$year) %>% 
+      mutate(population = population * 1000000) %>% 
+      mutate(`Tonnes of greenhouse emissions per KM2` = gas/area)
     
-    green_table <- data %>% select(Country = countries, KM2 = area, Emissions = gas, Population = population, `Tonnes of greenhouse emissions per area`) %>%
-      mutate(`Tonnes of greenhouse per million people` = Emissions/Population*1000000) %>% rename(`Tonnes of emissions in terms of CO2` = Emissions)
+    green_table <- data %>% select(Country = countries, KM2 = area, `Population Density` = density_pop, Emissions = gas, Population = population, `Tonnes of greenhouse emissions per KM2`) %>%
+      mutate(`Tonnes of greenhouse per million people` = Emissions/Population*1000000)%>%
+      rename(`Tonnes of emissions in terms of CO2` = Emissions) 
   })
   
   country_level <- reactive({
@@ -57,7 +60,7 @@ function(input, output) {
       theme_minimal() +
       
       labs(
-        title = "Greenhouse gas emissions per person in CO2E (Mil. of tonnes)",
+        title = "Greenhouse gas emissions per million people",
         y = 'Tonnes of greenhouse emissions per million people',
         x = ""
       ) +  
@@ -91,7 +94,7 @@ function(input, output) {
       theme_minimal() +
       
       labs(
-        title = "Greenhouse gas emissions per area in CO2E (Mil. of tonnes)",
+        title = "Greenhouse gas emissions per KM2",
         x = "",
         y = 'Tonnes of greenhouse emissions per KM2'
       ) +  
@@ -137,7 +140,8 @@ function(input, output) {
       labs(
         title = 'Plot Analysis',
         x = "Population (in Millions)",
-        y = "Total Greenhouse Emissions (Mil. tonnes)"
+        y = "Total Greenhouse Emissions (Mil. tonnes)",
+        caption = "<b>Source</b>: *Fisher's Iris dataset*"
       ) +  
       theme(
         legend.position = "none",
@@ -151,11 +155,13 @@ function(input, output) {
         # Adjust axis parameters such as size and color.
         axis.text = element_text(size = 8, color = "black"),
         axis.title = element_text(size = 7),
-        axis.line = element_line(colour = "grey50"),
+        axis.line = element_line(colour = "grey50", arrow = grid::arrow(length = unit(0.3, "cm"))),
+        
         
         # Use a light color for the background of the plot and the panel.
         panel.background = element_rect(fill = "white", color = "white"),
         plot.background = element_rect(fill = "white", color = "white"),
+        plot.caption = element_text(colour = "blue")
 
       )
     
@@ -196,16 +202,18 @@ function(input, output) {
         # Adjust axis parameters such as size and color.
         axis.text = element_text(size = 8, color = "black"),
         axis.title = element_text(size = 7),
-        axis.line = element_line(colour = "grey50"),
+        axis.line = element_line(colour = "grey50", arrow = grid::arrow(length = unit(0.3, "cm"))),
+        
         
         # Use a light color for the background of the plot and the panel.
         panel.background = element_rect(fill = "white", color = "white"),
         plot.background = element_rect(fill = "white", color = "white")
-      )
+      ) + scale_x_continuous(labels = scales::comma)
     
     ggplotly(ggp)
     
   })
+  
   
   output$comparison_table <- DT::renderDataTable({
     
