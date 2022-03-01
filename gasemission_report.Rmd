@@ -10,9 +10,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-*A. Name of the applicant: Andrea Colombo*
-
-*B-C. Charts*
+*A-B-C. Charts*
 
 ```{r pressure, echo=FALSE, message=FALSE, warning=FALSE, fig.width = 6 , fig.height = 5.5}
 # Library Loading

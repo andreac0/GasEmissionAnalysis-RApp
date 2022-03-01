@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "479389781",
+    "hash" : "0",
     "id" : "82FFE052",
     "lastKnownWriteTime" : 1627221931,
     "last_content_update" : 1627221931557,
     "path" : "D:/Documenti D/Codes/GasEmissionApp/server.R",
     "project_path" : "server.R",
     "properties" : {
-        "cursorPosition" : "85,4",
-        "scrollLine" : "0",
+        "cursorPosition" : "5,12",
+        "scrollLine" : "24",
         "tempName" : "Untitled1"
     },
     "read_only" : false,

@@ -1,17 +1,18 @@
 ---
 title: "Greenhouse Gas Emissions in the European Union (2019)"
+classoption: landscape, twocolumn
+geometry: "left=1cm,right=1cm,top=0cm,bottom=1.5cm"
 output: pdf_document
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-*A. Name of the applicant: *
+*A-B-C. Charts*
 
-*B. First Chart*
-
-```{r pressure, echo=FALSE, message=FALSE, warning=FALSE, fig.width = 6, fig.height = 7}
+```{r pressure, echo=FALSE, message=FALSE, warning=FALSE, fig.width = 6 , fig.height = 5.5}
 # Library Loading
 library(dplyr)
 library(ggplot2)
@@ -97,7 +98,10 @@ df<- green_popu %>% filter(time == '2019')
 green_popu <- green_popu %>% inner_join(area, by = c('countries')) %>% select(-TIME)
 green_popu <- data.frame(green_popu, gas_per_area = green_popu$gas/green_popu$area)
 
-dataset <- green_popu %>% filter(time == '2019') 
+dataset <- green_popu %>% filter(time == '2019')
+
+dataset <- data.frame(dataset,zoom = ifelse(dataset$population < 15, TRUE, FALSE))
+
 
 ggp <- ggplot(dataset, mapping = aes(x=population, y=gas)) +
 
@@ -139,21 +143,22 @@ ggp <- ggplot(dataset, mapping = aes(x=population, y=gas)) +
     plot.subtitle=element_text(size=5, hjust=0.5, face="italic", color="black")
   )+
   facet_zoom(x = population < 15, y = gas < 190, horizontal = FALSE ,zoom.size = 0.3, show.area = FALSE,
-             zoom.data = ifelse(dataset$population < 15, TRUE, FALSE)) + coord_cartesian(clip="off")
+             zoom.data = dataset$zoom)  + coord_cartesian(clip="off")
 
 ggp
 
 ```
 
-The first graph shows the relationship between the total greenhouse gas emissions in tonnes of CO2 equivalents (excluding LULUCF and memory items, including international aviation) and population of EU countries, for the year 2019. The size of the points depends on the relative amount of greenhouse gas emissions, compared to population:
+The size of the points depends on the relative amount of greenhouse gas emissions, compared to population:
 
 $$
 Size\; Points = \frac{Total\; greenhouse\; gas\; emissions}{Population}
 $$
 
-*C. Second Chart*
+The same is valid for the second chart, where Population is replaced with the Area
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width = 6, fig.height = 7}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width = 6 , fig.height = 4}
 ggp <- ggplot(dataset, mapping = aes(x=area, y=gas)) +
   geom_point(aes(colour=countries, size = gas/area), alpha=0.6) + 
   geom_text_repel(
@@ -196,21 +201,15 @@ labs(
 ggp
 ```
 
-The second graph shows the relationship between the total greenhouse gas emissions in tonnes of CO2 equivalents (excluding LULUCF and memory items, including international aviation) and the area in KM2 of EU countries, for the year 2019. The size of the points depends on the relative amount of greenhouse gas emissions, compared to the area of the country:
-
-$$
-Size\; Points = \frac{Total\; greenhouse\; gas\; emissions}{Area (km^2)}
-$$
-
 *D. Brief analysis*
 
 An interactive version of these analysis, including further ones, has been developed in a R Shiny app, available at https://andreacolombo.shinyapps.io/gasemissionapp/
 
 \begin{enumerate}
 
-\item As could be expected, the first chart shows a direct relationship between the tonnes of greenhouse gas emissions and the number of people living in a country: the higher is the population the more emissions that country will emit. What's more interesting about this graph is looking at the relative terms of this relationship: this feature is shown through the size of the points. When looking at these figures, we can see that some smaller countries are the worst placed: Luxembourg is the EU country that in 2019 has produced the higher number of tonnes of greenhouse emissions, compared to the size of its population. Specifically, it emitted around 20 tonnes of greenhouse gas emissions per millions of people, while the EU mean is 8.28 tonnes per millions of inhabitants: this figure is also quite higher compared to the second placed of this ranking, Ireland, which emits 12 tonnes per million people.
+\item Direct relationship between tonnes of greenhouse gas emissions and number of people living in a country: the higher is the population the more emissions that country will emit. Looking at the relative terms of this relationship (the size of the points) we can see that some smaller countries are the worst placed, as Luxembourg, which is the worst ranked country with around 20 tonnes of greenhouse gas emissions per millions of people, while the EU mean is 8.28 tonnes.
 
-\item When looking at the second chart, the relationship is much less clear compared to the first graph, although an underlying direct relationship could be observed. Finland, Sweden and Malta are the EU countries that emit the less emissions compared to the size of their territories: the first two are well-known to have a large surface area, mostly uninhabited, therefore it is a natural consequence to perform better in this ranking: this translates in the graph to have the corresponding points a bit isolated. The worst placed EU country is, as for the first chart, Luxembourg but this time is strictly followed by its neighbors: the Netherlands, Belgium and some big countries such as Germany, the UK and Italy. These are all countries with an high population density and are known to be the host of many industries.
+\item Unclear relationship for chart 2, although an underlying direct relationship may be observed. In relative terms, Finland, Sweden and Malta are the EU countries that emit the less emissions compared to the size of their territories. The worst placed EU countries are the ones with an high population density and host of many industries.
 
 \item A comprehensive analysis of the charts and the underlying data shows that Scandinavian countries are the less polluting EU countries in terms of CO2, with Finland and Sweden performing well in both the charts showed. 
 
